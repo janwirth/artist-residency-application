@@ -5,10 +5,12 @@
     - 'scroll in from right when the user gets there'
 - tone.js for playing back individual tracks
     - visualize with FFT, https://tonejs.github.io/docs/13.8.25/FFT.html
-    - 
+    - https://tonejs.github.io/examples/player.html
 - idea: collaborative trackmaking
 - CSS grid: build overlay
 - 
+it's not a social media platform
+
 next steps:
 finalize text & content
 - later: take images
