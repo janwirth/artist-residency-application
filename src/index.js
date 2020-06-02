@@ -1,6 +1,44 @@
 import './main.css';
 import { Elm } from './Main.elm';
 import * as serviceWorker from './serviceWorker';
+import {Player, Transport, Loop} from 'tone'
+
+// we set up each track and then play it in a loop
+const tracks = [ 'bass.mp3'
+    , 'clap-1.mp3'
+    , 'hat-1.mp3'
+    , 'kick-1.mp3'
+    , 'kick-2.mp3'
+    , 'rim-1.mp3'
+    , 'rim-2.mp3'
+    , 'shakers-1.mp3'
+    , 'strings-background.mp3'
+    , 'strings-lead.mp3'
+    , 'wood-1.mp3'
+    ]
+
+const trackLength = '4m'
+const bpm = 93
+Transport.bpm.value = bpm
+Transport.setLoopPoints(0, "1m")
+// Transport.loop = true
+
+const players = tracks.map(track => {
+    const player = new Player(`/soundtrack/${track}`).toMaster()
+    // player.sync().start(0)
+    return {player, track}
+    // player.autostart = true
+})
+
+const loop = new Loop(time => {
+    console.log(time)
+    players.forEach(({player}) => player.restart())
+    // Transport.start()
+}, trackLength)
+loop.start(0)
+
+
+setTimeout(() => Transport.start(), 500)
 
 Elm.Main.init({
   node: document.getElementById('root')
