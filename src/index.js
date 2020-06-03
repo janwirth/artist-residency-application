@@ -1,7 +1,7 @@
 import './main.css';
 import { Elm } from './Main.elm';
 import * as serviceWorker from './serviceWorker';
-import {Player, Transport, Loop} from 'tone'
+import {Player, Transport, Loop, AutoFilter} from 'tone'
 
 
 class AudioInstallation extends HTMLElement {
@@ -22,10 +22,22 @@ class AudioInstallation extends HTMLElement {
                 ((oldValue == 'not-started') || (oldValue == 'paused')) && newValue == 'playing'
             if (startedPlaying) {
                 Transport.start()
+                // autoFilter.rampTo(1, 0)
+            }
+            const stoppedPlaying =
+                (oldValue == 'playing') && newValue == 'paused'
+            if (stoppedPlaying) {
+                Transport.stop()
+                players.forEach(({player}) => player.stop())
+                // autoFilter.rampTo(0, 2)
             }
         }
     }
 }
+
+
+var autoFilter = new AutoFilter("4n").toMaster().start();
+console.log(autoFilter)
 
 window.customElements.define('factory-beat-player', AudioInstallation )
 
@@ -50,7 +62,7 @@ Transport.setLoopPoints(0, "1m")
 // Transport.loop = true
 
 const players = tracks.map(track => {
-    const player = new Player(`/soundtrack/${track}`).toMaster()
+    const player = new Player(`/soundtrack/${track}`).connect(autoFilter)
     // player.sync().start(0)
     return {player, track}
     // player.autostart = true

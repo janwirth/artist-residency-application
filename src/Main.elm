@@ -36,6 +36,7 @@ init =
 type Msg
     = NoOp
     | Play
+    | Stop
 
 
 
@@ -46,6 +47,8 @@ update msg model =
             ( model, Cmd.none )
         Play ->
             ( {state = Playing}, Cmd.none )
+        Stop ->
+            ( {state = Paused}, Cmd.none )
 
 
 
@@ -61,6 +64,9 @@ view model =
         , Html.button
             [Html.Events.onClick Play]
             [Html.text "gogo"]
+        , Html.button
+            [Html.Events.onClick Stop]
+            [Html.text "stopstop"]
         ]
 
 
