@@ -17,3 +17,8 @@ finalize text & content
 think about & draw layout
 - make overlay for grid and 4px baseline grid
 - do not use elm-ui
+- 
+- 
+pitfall: do not restart transport, restart the players on loop
+
+technologies explored

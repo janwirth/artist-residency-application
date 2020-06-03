@@ -3,6 +3,32 @@ import { Elm } from './Main.elm';
 import * as serviceWorker from './serviceWorker';
 import {Player, Transport, Loop} from 'tone'
 
+
+class AudioInstallation extends HTMLElement {
+
+    connectedCallback() {
+        this.innerHTML = 'hello world'
+        this.setAttribute('state', 'not-started')
+    }
+
+    static get observedAttributes() {
+        return ['state', 'keyframes', 'position']
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        console.log('name', name)
+        if (name == 'state' ) {
+            const startedPlaying =
+                ((oldValue == 'not-started') || (oldValue == 'paused')) && newValue == 'playing'
+            if (startedPlaying) {
+                Transport.start()
+            }
+        }
+    }
+}
+
+window.customElements.define('factory-beat-player', AudioInstallation )
+
 // we set up each track and then play it in a loop
 const tracks = [ 'bass.mp3'
     , 'clap-1.mp3'
@@ -38,7 +64,7 @@ const loop = new Loop(time => {
 loop.start(0)
 
 
-setTimeout(() => Transport.start(), 500)
+// setTimeout(() => Transport.start(), 500)
 
 Elm.Main.init({
   node: document.getElementById('root')

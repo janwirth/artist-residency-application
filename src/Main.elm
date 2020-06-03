@@ -3,18 +3,30 @@ module Main exposing (..)
 import Browser
 import Html exposing (Html, text, div, h1, img)
 import Html.Attributes exposing (src)
+import Html.Events
 
 
 ---- MODEL ----
 
 
 type alias Model =
-    {}
+    {state : State}
+
+type State =
+    NotStarted
+    | Paused
+    | Playing
+
+stateToString state =
+    case state of
+        NotStarted -> "not-started"
+        Paused -> "paused"
+        Playing -> "playing"
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( {}, Cmd.none )
+    ( {state = Paused}, Cmd.none )
 
 
 
@@ -23,11 +35,17 @@ init =
 
 type Msg
     = NoOp
+    | Play
+
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        NoOp ->
+            ( model, Cmd.none )
+        Play ->
+            ( {state = Playing}, Cmd.none )
 
 
 
@@ -39,6 +57,10 @@ view model =
     div []
         [ img [ src "/logo.svg" ] []
         , h1 [] [ text "Your Elm App is working!" ]
+        , Html.node "factory-beat-player" [Html.Attributes.attribute "state" (stateToString model.state)] []
+        , Html.button
+            [Html.Events.onClick Play]
+            [Html.text "gogo"]
         ]
 
 
