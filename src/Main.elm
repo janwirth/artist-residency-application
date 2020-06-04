@@ -51,14 +51,15 @@ update msg model =
             ( {state = Paused}, Cmd.none )
 
 
-quote = """
-    I think any time somebody considers what they want from an advanced economy
-    or an economy in a situation where technology is getting better and better
-    is they should want more and more of the economy to essentially be about subjective values.
-    About things like entertainment, cosmetics and sports and lifestyle and design and all that.
-    That's what we should want because that's a signal that we are creating technologies and an economy that's really
-    serving us.
-    """
+quote = Html.p [Html.Attributes.class "quote"] [
+    Html.text "I think any time somebody considers what they want from"
+    , Html.span [Html.Attributes.class "ellipsis"] [Html.text "[...]"]
+    , Html.text "an economy in a situation where technology is getting better and better is"
+    , Html.span [Html.Attributes.class "ellipsis"] [Html.text "[...]"]
+    , Html.text "more of the economy to essentially be about subjective values."
+    , Html.span [Html.Attributes.class "ellipsis"] [Html.text "[...]"]
+    , Html.text "Because that's a signal that we are creating technologies and an economy that's really serving us."
+    ]
 
 -- Jaron Lanier, Making Sense Podcast #135, minute 11
 
@@ -70,7 +71,7 @@ view model =
     Html.article []
         -- intro
         [ h1 [Html.Attributes.class "title"] [ text "Jan Wirth - Artist Residency application"]
-        , Html.p [Html.Attributes.class "quote"] [text quote]
+        , quote
         , Html.p [Html.Attributes.class "intro-text"]
             [ Html.text "My name is Jan. And you are reading this because after learning about the artist residency I just could not sleep. I could not sleep because I got very inspired."
             , Html.text "The general concept of the residency inspires me because I am passionate about technology and its implications for how we think, live and love."

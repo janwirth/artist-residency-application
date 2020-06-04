@@ -8,23 +8,53 @@
 [data-elm-hot="true"] {
   height: inherit;
 }
+* {
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+
+}
+body {
+    font-family: 'Cardo', serif;
+}
 
 article {
     display: grid;
-    grid-template-columns: repeat(12, 1fr) 2%;
+    grid-template-columns: repeat(12, 1fr);
+    grid-column-gap: 1.25%;
+    margin: 1vw;
 }
 
 .title {
-    grid-area: 1/ 9/ auto/ span 3
+    grid-area: 1/ 9/ 1 / 12;
+    text-transform: uppercase;
+    letter-spacing: 0.05em; /* letter spacing for uppercased*/
+    font-family: 'Montserrat', sans-serif;
+    text-align: right;
+
 }
 .quote {
-    grid-area: 2 / 2/ auto / span 3
+    grid-area: 2 / 2 / 2 / 12;
+    font-size: 3rem;
+    margin: 10vh 0;
+    text-align: center;
+    max-width: 60ch; /* maximium character count should always be 50-60*/
 }
 
 .player {
-    grid-area: 3 / 3 / auto / span 10
+    grid-area: 3 / 3 / 3 / 12;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .intro-text {
-    grid-area: 3 / 3 / auto / span 10
+    grid-area: 4 / 1 / 4 / 12
+}
+
+.ellipsis {
+    opacity: 0.2;
+    margin: 0 0.2em;
+    letter-spacing: -0.1em;
+    font-weight: 300;
+    font-size: 0.7em;
+    line-height: -1em;
 }
