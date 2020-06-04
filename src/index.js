@@ -12,7 +12,7 @@ class AudioInstallation extends HTMLElement {
     }
 
     static get observedAttributes() {
-        return ['state', 'keyframes', 'position']
+        return ['state', 'values', 'position']
     }
 
     attributeChangedCallback(name, oldValue, newValue) {

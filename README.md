@@ -52,3 +52,5 @@ technologies I picked up
 
 I want to get in touch with the most talented and competitive people
 to learn, support and create something great
+
+presentations in lisbon, singapore

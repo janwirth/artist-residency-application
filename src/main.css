@@ -9,18 +9,22 @@
   height: inherit;
 }
 
-body {
-  font-family: 'Source Sans Pro', 'Trebuchet MS', 'Lucida Grande', 'Bitstream Vera Sans', 'Helvetica Neue', sans-serif;
-  margin: 0;
-  text-align: center;
-  color: #293c4b;
+article {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr) 2%;
 }
 
-h1 {
-  font-size: 30px;
+.title {
+    grid-area: 1/ 9/ auto/ span 3
+}
+.quote {
+    grid-area: 2 / 2/ auto / span 3
 }
 
-img {
-  margin: 20px 0;
-  max-width: 200px;
+.player {
+    grid-area: 3 / 3 / auto / span 10
+}
+
+.intro-text {
+    grid-area: 3 / 3 / auto / span 10
 }
