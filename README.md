@@ -22,3 +22,33 @@ think about & draw layout
 pitfall: do not restart transport, restart the players on loop
 
 technologies explored
+
+
+# Content
+Welcome
+- could not sleep
+- got so inspired because it feels like a perfect match to my profile
+non-stage live music experience
+- spatial sound as you travel through the site
+- looking at an installation right now
+- music composed by me
+
+achievements
+- hackathon winner
+- EF
+- scalab
+- written bots that use computer vision
+- worked for mercedes, and startups
+- music
+    - networked, know music labels
+    - DJ with vinyl records
+- art and 
+
+human-machine interaction
+
+curious about VR and AR
+technologies I picked up
+- tone.js
+
+I want to get in touch with the most talented and competitive people
+to learn, support and create something great
