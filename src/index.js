@@ -7,7 +7,6 @@ import {Player, Transport, Loop, AutoFilter} from 'tone'
 class AudioInstallation extends HTMLElement {
 
     connectedCallback() {
-        this.innerHTML = 'hello world'
         this.setAttribute('state', 'not-started')
     }
 

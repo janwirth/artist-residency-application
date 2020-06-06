@@ -79,14 +79,13 @@ view model =
         , Html.p [Html.Attributes.class "intro-text"]
             [ Html.text "Hello There! My name is Jan. And you are reading this because after learning about the artist residency I just could not sleep. I could not sleep because I got very inspired."
             , Html.text "The general concept of the residency inspires me because I am passionate about technology and its implications for how we think, live and love."
-            , Html.text "The themes perfectly match my profile. I am a creative technologist with a background in arts and design."
+            , Html.text "The topics perfectly match my profile. I am a creative technologist with a background in arts and design."
             , Html.text "Right now, you are looking at a mix between a non-stage live music experience and sound installation. It is composed, designed and hand-coded just for you."
             , Html.text "I want to show how keen I am to work with the most ambitious people in experimental arts and technology and be part of something meaningful. So I put in the work."
             , Html.text "I hope this experience helps you evaluate if and why I should be part of the artist residency program."
             ]
         , Html.section [Html.Attributes.class "player"][
-              Html.h2 [] [Html.text "Hit play"]
-            , playButton model
+            playButton model
             , Html.node "factory-beat-player" [Html.Attributes.attribute "state" (stateToString model.state)] []
         ]
         -- what I do
