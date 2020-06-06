@@ -139,8 +139,7 @@ p {
 
 
 #viz-svg path {
-    stroke-dashoffset: 1398;
-    stroke-dasharray: 10 10 20 10 5 0 1 0 35;
+    stroke-dasharray: 1 5 10 2 20 5 20 20 50 20 20 0;
     stroke: url(#gradient);
 }
 

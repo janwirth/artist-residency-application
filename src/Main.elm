@@ -4,13 +4,14 @@ import Browser
 import Html exposing (Html, text, div, h1, img)
 import Html.Attributes exposing (src)
 import Html.Events
+import Json.Decode as Decode
 
 
 ---- MODEL ----
 
 
 type alias Model =
-    {state : State}
+    {state : State, fft : List Float}
 
 type State =
     NotStarted
@@ -26,9 +27,15 @@ stateToString state =
 
 init : ( Model, Cmd Msg )
 init =
-    ( {state = Paused}, Cmd.none )
+    ( {state = Paused, fft = []}, Cmd.none )
 
+onFft =
+    Html.Events.on "fft" decodeFft
 
+decodeFft : Decode.Decoder Msg
+decodeFft =
+    Decode.field "detail" (Decode.list Decode.float)
+    |> Decode.map FftReceived
 
 ---- UPDATE ----
 
@@ -37,6 +44,7 @@ type Msg
     = NoOp
     | Play
     | Stop
+    | FftReceived (List Float)
 
 
 
@@ -46,9 +54,19 @@ update msg model =
         NoOp ->
             ( model, Cmd.none )
         Play ->
-            ( {state = Playing}, Cmd.none )
+            ( {model | state = Playing}, Cmd.none )
         Stop ->
-            ( {state = Paused}, Cmd.none )
+            ( {model | state = Paused}, Cmd.none )
+        FftReceived fft ->
+            ( {model | fft = case model.fft of
+                [] -> List.map abs fft
+                    |> Debug.log "init"
+                _ -> List.map2
+                    (\before next  -> max (before - 1)
+                    (abs next))
+                    model.fft
+                    fft
+                }, Cmd.none )
 
 
 quote = Html.p [Html.Attributes.class "quote"] [
@@ -66,12 +84,27 @@ quote = Html.p [Html.Attributes.class "quote"] [
 
 ---- VIEW ----
 
+renderStyles {fft} =
+    let
+        renderRule1 index val = "path:nth-child(" ++ (String.fromInt (128 - index)) ++ ") {transform: rotate(" ++ (String.fromFloat (val / 100)) ++ "deg)}"
+        renderRule2 index val = "path:nth-child(" ++ (String.fromInt (128 - index)) ++ ") {stroke-dashoffset: " ++ (String.fromFloat val) ++ "}"
+        rules =
+            fft
+            |> List.indexedMap renderRule1
+            |> String.join "\n"
+        rules2 =
+            fft
+            |> List.indexedMap renderRule2
+            |> String.join "\n"
+    in
+        Html.node "style" [] [Html.text (rules ++ rules2)]
 
 view : Model -> Html Msg
 view model =
     Html.article []
         -- intro
-        [ h1 [Html.Attributes.class "title"] [ text "Jan Wirth - Artist Residency application"]
+        [ renderStyles model
+        , h1 [Html.Attributes.class "title"] [ text "Jan Wirth - Artist Residency application"]
         , quote
         , Html.p [Html.Attributes.class "quote-source"] [
             Html.text "Jaron Lanier, Philosopher, Artist, Technologist"
@@ -86,7 +119,7 @@ view model =
             ]
         , Html.section [Html.Attributes.class "player"][
             playButton model
-            , Html.node "factory-beat-player" [Html.Attributes.attribute "state" (stateToString model.state)] []
+            , Html.node "factory-beat-player" [onFft, Html.Attributes.attribute "state" (stateToString model.state)] []
         ]
         -- what I do
         , Html.h2 [] [Html.text "Some Projects"]
