@@ -103,21 +103,23 @@ p {
 .player {
     margin-top: 8px;
     font-family: 'Montserrat', sans-serif;
+    grid-column: span 4;
 }
 .player button {
+    color: inherit;
     background: transparent;
-    border: 1px solid black;
+    border: 1px solid currentColor;
     border-radius: 2px;
     padding: 0.75em 2em;
     margin: 0.7em 0;
 }
 .player button:hover {
-    background: black;
-    color: white;
+    background: white;
+    color: black;
 }
 
 .intro-text {
-    column-span: all;
+    grid-column: span 6;
     margin-top: -2px;
 }
 
@@ -158,4 +160,9 @@ p {
     transform: scale(2) rotate(45deg);
     /* opacity: 0.2; */
 
+}
+
+body {
+    background: linear-gradient(135deg, black 32%,  purple);
+    color: white
 }

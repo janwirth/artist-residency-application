@@ -60,7 +60,6 @@ update msg model =
         FftReceived fft ->
             ( {model | fft = case model.fft of
                 [] -> List.map abs fft
-                    |> Debug.log "init"
                 _ -> List.map2
                     (\before next  -> max (before - 1)
                     (abs next))
