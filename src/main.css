@@ -20,10 +20,11 @@ body {
     margin: 0;
 }
 
-body {
+#body {
     background-image: linear-gradient(0deg, #ffffff 25%, #ffcccc 25%, #ffcccc 50%, #ffffff 50%, #ffffff 75%, #ffcccc 75%, #ffcccc 100%);
     background-size: 60.00px 60.00px;
 }
+
 article {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
@@ -136,4 +137,28 @@ p {
 
 .nowrap { /* good typograph */
     white-space: nowrap;
+}
+
+
+#viz-svg path {
+    stroke-dashoffset: 1398;
+    stroke-dasharray: 10 10 20 10 5 0 1 0 35;
+    stroke: url(#gradient);
+}
+
+
+#viz-svg {
+    z-index: -1;
+    position: fixed;
+    width: 297mm;
+    pointer-events: none;
+    stroke-linecap: round;
+    opacity: 0.4;
+    /* position: absolute; */
+    height: 210mm;
+    object-fit: cover;
+    /* background: #FAFAFB; */
+    transform: scale(2) rotate(45deg);
+    /* opacity: 0.2; */
+
 }
