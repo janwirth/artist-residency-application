@@ -58,14 +58,7 @@ update msg model =
         Stop ->
             ( {model | state = Paused}, Cmd.none )
         FftReceived fft ->
-            ( {model | fft = case model.fft of
-                [] -> List.map abs fft
-                _ -> List.map2
-                    (\before next  -> max (before - 1)
-                    (abs next))
-                    model.fft
-                    fft
-                }, Cmd.none )
+            ( {model | fft = List.take 40 fft}, Cmd.none )
 
 
 quote = Html.p [Html.Attributes.class "quote"] [
@@ -73,9 +66,11 @@ quote = Html.p [Html.Attributes.class "quote"] [
     , Html.span [Html.Attributes.class "ellipsis"] [Html.text "[...]"]
     , Html.text "an economy in a situation where technology is getting better and better is"
     , Html.span [Html.Attributes.class "ellipsis"] [Html.text "[...]"]
-    , Html.text "more of the economy to essentially be about subjective values."
+    , Html.text "the economy to"
     , Html.span [Html.Attributes.class "ellipsis"] [Html.text "[...]"]
-    , Html.text "Because that's a signal that we are creating technologies and an economy that's really "
+    , Html.text "be about subjective values."
+    , Html.span [Html.Attributes.class "ellipsis"] [Html.text "[...]"]
+    , Html.text "That's a signal that we are creating technologies and an economy that's really "
     , Html.span [Html.Attributes.class "nowrap"] [Html.text "serving us."]
     ]
 
@@ -85,22 +80,51 @@ quote = Html.p [Html.Attributes.class "quote"] [
 
 renderStyles {fft} =
     let
-        renderRule1 index val = "path:nth-child(" ++ (String.fromInt (128 - index)) ++ ") {transform: rotate(" ++ (String.fromFloat (val / 100)) ++ "deg)}"
-        renderRule2 index val = "path:nth-child(" ++ (String.fromInt (128 - index)) ++ ") {stroke-dashoffset: " ++ (String.fromFloat val) ++ "}"
+        selector index = "path:nth-child(" ++ (String.fromInt index) ++ "n)"
+        prop1 val = "transform: rotate(" ++ (String.fromFloat (val / 100)) ++ "deg)"
+        renderRule1 index val =  selector index ++ "{" ++ prop2 val ++ "}"
+        prop2 val = "stroke-dashoffset: " ++ (String.fromFloat val)
+        -- renderRule2 index val = "path:nth-child(" ++ (String.fromInt index) ++ "n) { ++ "}"
         rules =
             fft
             |> List.indexedMap renderRule1
             |> String.join "\n"
-        rules2 =
-            fft
-            |> List.indexedMap renderRule2
-            |> String.join "\n"
+--         rules2 =
+--             fft
+--             |> List.indexedMap renderRule2
+--             |> String.join "\n"
     in
-        Html.node "style" [] [Html.text (rules ++ rules2)]
+        Html.node "style" [] [Html.text (rules)]
+
+visualizer : Model -> Html Msg
+visualizer {fft} =
+    let
+        height = Html.Attributes.style "height" "200px"
+        bg = Html.Attributes.style "background-color" "red"
+        display = Html.Attributes.style "display" "flex"
+        alignBottom = Html.Attributes.style "align-items" "flex-end"
+        renderBar val =
+            let
+                width = Html.Attributes.style "width" ((String.fromFloat <| 100 / (List.length fft |> toFloat)) ++ "%")
+                bg_ = Html.Attributes.style "background-color" "white"
+                offset = Html.Attributes.style "transform" ("translateY(" ++ String.fromFloat val ++ "px)")
+            in
+                Html.div
+                    [height, offset, width, bg_]
+                    []
+    in
+        fft
+        |> List.map renderBar
+        |> Html.div [height, display, alignBottom]
+
+items = ["/painting-1.jpg", "/painting-2.jpg", "/painting-3.jpg"]
+imgs =
+    items
+    |> List.map (\src -> Html.node "intense-image" [Html.Attributes.class "artwork"] [ Html.img [Html.Attributes.src src] []])
 
 view : Model -> Html Msg
 view model =
-    Html.article []
+    Html.article [] <|
         -- intro
         [ renderStyles model
         , h1 [Html.Attributes.class "title"] [ text "Jan Wirth - Artist Residency application"]
@@ -121,7 +145,11 @@ view model =
             , Html.node "factory-beat-player" [onFft, Html.Attributes.attribute "state" (stateToString model.state)] []
         ]
         -- what I do
-        , Html.h2 [] [Html.text "Some Projects"]
+        , Html.h2 [] [Html.text "Art"]
+        ]
+        ++ imgs ++
+        [
+          Html.h2 [] [Html.text "Some Projects"]
         , Html.p [Html.Attributes.class "maff"] [
             Html.a [ Html.Attributes.href "https://github.com/FranzSkuffka/maff"] [Html.text "Maff"]
            , Html.text " is a Telegram bot that helps you transcribe mathematical terms into LaTeX, reducing the need for scientist to learn special syntax for experession mathematical equations. "

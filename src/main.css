@@ -166,3 +166,17 @@ body {
     background: linear-gradient(135deg, black 32%,  purple);
     color: white
 }
+
+.artwork {
+    grid-column: span 4;
+    object-fit: contain;
+    display: block
+}
+.artwork > img {
+    width: 100%;
+    cursor: url('/plus_cursor.png') 25 25, auto;
+}
+
+a {
+    color: white
+}

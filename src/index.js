@@ -2,8 +2,9 @@ import './main.css';
 import { Elm } from './Main.elm';
 import * as serviceWorker from './serviceWorker';
 import {Player, Transport, Loop, AutoFilter, FFT} from 'tone'
+import Intense from '@tholman/intense-images'
 
-const fft = new FFT(128)
+const fft = new FFT(256)
 
 
 class AudioInstallation extends HTMLElement {
@@ -30,7 +31,7 @@ class AudioInstallation extends HTMLElement {
                              this.dispatchEvent(new CustomEvent('fft', {detail}))
                          }
                      }
-                this.interval = setInterval(redAndEmit, 10)
+                this.interval = setInterval(redAndEmit, 5)
             }
             const stoppedPlaying =
                 (oldValue == 'playing') && newValue == 'paused'
@@ -43,10 +44,17 @@ class AudioInstallation extends HTMLElement {
     }
 }
 
+class IntenseImage extends HTMLElement {
+    connectedCallback() {
+        Intense(this.children[0])
+    }
+}
+
 
 var autoFilter = new AutoFilter("4n").toMaster().start();
 
 window.customElements.define('factory-beat-player', AudioInstallation )
+window.customElements.define('intense-image', IntenseImage )
 
 // we set up each track and then play it in a loop
 const tracks = [ 'bass'
@@ -62,7 +70,7 @@ const tracks = [ 'bass'
     , 'wood-1'
     ]
 
-const tracksToFollow = ['rim-1', 'rim-2', 'lead-background']
+const tracksToFollow = ['strings-background']
 const trackLength = '4m'
 const bpm = 93
 Transport.bpm.value = bpm
