@@ -15,9 +15,11 @@
 
 }
 body {
-    font-family: 'Cardo', serif;
+    font-family: 'IBM Plex Serif', serif;
     padding: 0;
     margin: 0;
+    font-size: 16px;
+    cursor: default;
 }
 
 #body {
@@ -39,7 +41,7 @@ article > * {
 .title {
     text-transform: uppercase;
     letter-spacing: 0.05em; /* letter spacing for uppercased*/
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'IBM Plex Sans', sans-serif;
     text-align: right;
     margin-top: 16px;
 
@@ -87,22 +89,43 @@ p {
     line-height: 1.88em;
 }
 
+::selection {
+    background: #600075
+}
+
 .quote {
-    font-size: 3rem;
+    font-size: 2rem;
     margin: 2.11em 0 0;
     /*text-align: center;*/;
-    justify-self: center; /* special case */
     line-height: 1.2499;
+    position: relative
+}
+.quote:before {
+    content: '“';
+    position: absolute;
+    left: -.5em;
+}
+.quote:after {
+    content: '”';
+    margin-left: .1em
 }
 
 .quote-source {
+    grid-column: 7 / span 6;
     margin-top: 1.55em;
     margin-bottom: 3em;
+    font-family: 'IBM Plex Sans', sans-serif;
+    text-align: right;
+}
+
+.quote-source:before {
+    content: "—  "
 }
 
 .player {
     margin-top: 8px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'IBM Plex Sans', sans-serif;
+    position: sticky;
     grid-column: span 4;
 }
 .player button {
@@ -121,18 +144,21 @@ p {
 .intro-text {
     grid-column: span 6;
     margin-top: -2px;
+    font-family: 'IBM Plex Sans', sans-serif;
 }
 
 .scalab-text {
 }
 
 .ellipsis {
-    opacity: 0.2;
-    margin: 0 0.2em;
+    opacity: 0.5;
     letter-spacing: -0.1em;
     font-weight: 300;
-    font-size: 0.7em;
+    font-size: 0.3em;
     line-height: -1em;
+}
+.ellipsis:hover {
+    opacity: 1;
 }
 
 .nowrap { /* good typograph */
@@ -152,18 +178,13 @@ p {
     width: 297mm;
     pointer-events: none;
     stroke-linecap: round;
-    opacity: 0.4;
-    /* position: absolute; */
     height: 210mm;
     object-fit: cover;
-    /* background: #FAFAFB; */
     transform: scale(2) rotate(45deg);
-    /* opacity: 0.2; */
-
 }
 
 body {
-    background: linear-gradient(135deg, black 32%,  purple);
+    background: linear-gradient(135deg, #0E050F 32%,  #31073C);
     color: white
 }
 
