@@ -133,7 +133,8 @@ view model =
             Html.text "Jaron Lanier, Philosopher, Artist, Technologist"
         ]
         , Html.p [Html.Attributes.class "intro-text"]
-            [ Html.text "Hello There! My name is Jan. And you are reading this because after learning about the artist residency I just could not sleep. I could not sleep because I got very inspired."
+            [ Html.text "Hey, my name is Jan. I am a software/design/music crossover entrepreneur."
+            , Html.text "You are looking at a interactive music installation handcrafted just for you."
             , Html.text "The general concept of the residency inspires me because I am passionate about technology and its implications for how we think, live and love."
             , Html.text "The topics perfectly match my profile. I am a creative technologist with a background in arts and design."
             , Html.text "Right now, you are looking at a mix between a non-stage live music experience and sound installation. It is composed, designed and hand-coded just for you."
