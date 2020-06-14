@@ -1,10 +1,13 @@
 import './main.css';
+import * as canvas from 'elm-canvas'
 import { Elm } from './Main.elm';
 import * as serviceWorker from './serviceWorker';
 import {Player, Transport, Loop, AutoFilter, FFT} from 'tone'
 import Intense from '@tholman/intense-images'
 
 const fft = new FFT(256)
+
+console.log(canvas)
 
 
 class AudioInstallation extends HTMLElement {
@@ -31,7 +34,7 @@ class AudioInstallation extends HTMLElement {
                              this.dispatchEvent(new CustomEvent('fft', {detail}))
                          }
                      }
-                this.interval = setInterval(redAndEmit, 5)
+                this.interval = setInterval(redAndEmit, 300)
             }
             const stoppedPlaying =
                 (oldValue == 'playing') && newValue == 'paused'

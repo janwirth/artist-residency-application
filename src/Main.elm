@@ -5,6 +5,7 @@ import Html exposing (Html, text, div, h1, img)
 import Html.Attributes exposing (src)
 import Html.Events
 import Json.Decode as Decode
+import JoyDivision
 
 
 ---- MODEL ----
@@ -122,11 +123,21 @@ imgs =
     items
     |> List.map (\src -> Html.node "intense-image" [Html.Attributes.class "artwork"] [ Html.img [Html.Attributes.src src] []])
 
+viz model =
+    let
+        val =
+            List.head model.fft
+            |> Maybe.withDefault 10
+            |> Debug.log "val"
+        (joyModel, _) = JoyDivision.init 10
+    in
+    JoyDivision.view joyModel
 view : Model -> Html Msg
 view model =
     Html.article [] <|
         -- intro
         [ renderStyles model
+        , viz model |> Html.map (always NoOp)
         , h1 [Html.Attributes.class "title"] [ text "Jan Wirth - Artist Residency application"]
         , quote
         , Html.p [Html.Attributes.class "quote-source"] [

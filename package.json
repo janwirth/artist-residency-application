@@ -15,6 +15,7 @@
   "dependencies": {
     "@tholman/intense-images": "^1.0.7",
     "create-elm-app": "^4.2.24",
+    "elm-canvas": "^2.2.4",
     "tone": "^13.8.25"
   }
 }
