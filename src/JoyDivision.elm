@@ -48,12 +48,10 @@ stepY =
 
 cols =
     (w * 2) // stepX
-    |> Debug.log "cols"
 
 
 rows =
     (h - paddingY * 2) // stepY
-    |> Debug.log "rows"
 
 
 cells =
