@@ -17,12 +17,26 @@ canvas {
     height: 100vh !important;
     opacity: 0.8
 }
+elm-canvas {
+    position: absolute;
+}
+
+.projects-content {
+    display: flex;
+    flex-wrap: wrap
+}
+
 * {
     font-size: inherit;
     font-family: inherit;
     font-weight: inherit;
 
 }
+
+.quote {
+    font-family: 'IBM Plex Serif', serif;
+}
+
 body {
     font-family: 'IBM Plex Serif', serif;
     padding: 0;
@@ -38,12 +52,22 @@ body {
 
 article {
     display: grid;
-    margin: 0 calc(5vw + 100px);
     grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: 100vh 100vh 100vh auto 100vh 100vh;
     grid-column-gap: 1.5%;
+    margin: 0 50px;
+}
+@media only screen and (min-width: 800px) {
+    article {
+        margin: 0 calc(5vw + 100px);
+    }
 }
 article > * {
     grid-column: span 12;
+}
+
+p {
+    font-family: 'IBM Plex Sans', sans-serif;
 }
 
 
@@ -52,7 +76,12 @@ article > * {
     letter-spacing: 0.05em; /* letter spacing for uppercased*/
     font-family: 'IBM Plex Sans', sans-serif;
     text-align: right;
-    margin-top: 16px;
+    padding: 16px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    grid-column: span 12;
 
 }
 
@@ -77,15 +106,14 @@ h2 {
     padding-top: 133%;
     position: relative;
 }
-/** This nesting techique is a necessary evil for keeping aspect ratio" */
-.img > img {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: left;
+.maff-picture {
+    margin-left: 30px;
 }
+/** This nesting techique is a necessary evil for keeping aspect ratio" */
+img {
+    width: 300px;
+}
+
 
 img {
     box-shadow: 0 2px 1px rgba(0,0,0,0.09), 0 4px 2px rgba(0,0,0,0.09), 0 8px 4px rgba(0,0,0,0.09), 0 16px 8px rgba(0,0,0,0.09), 0 32px 16px rgba(0,0,0,0.09);
@@ -103,11 +131,16 @@ p {
 }
 
 .quote {
-    font-size: 2rem;
+    font-size: 1.5rem;
     margin: 2.11em 0 0;
     /*text-align: center;*/;
     line-height: 1.2499;
     position: relative
+}
+@media only screen and (min-width: 800px) {
+    .quote {
+        font-size: 2rem;
+    }
 }
 .quote:before {
     content: '“';
@@ -120,38 +153,57 @@ p {
 }
 
 .quote-source {
-    grid-column: 7 / span 6;
-    margin-top: 1.55em;
-    margin-bottom: 3em;
     font-family: 'IBM Plex Sans', sans-serif;
     text-align: right;
+    max-width: none;
 }
 
 .quote-source:before {
     content: "—  "
 }
+.greeting {
+    font-size: calc(1rem + 5vh + 10vw);
+    margin-left: -10px;
+}
+
+.projects-content {
+    margin-bottom: 10rem;
+}
 
 .player {
     margin-top: 8px;
     font-family: 'IBM Plex Sans', sans-serif;
-    position: sticky;
-    grid-column: span 4;
+    grid-column: span 12;
+    margin: 10px 0;
 }
-.player button {
+.player-button {
     color: inherit;
     background: transparent;
     border: 1px solid currentColor;
     border-radius: 2px;
     padding: 0.75em 2em;
-    margin: 0.7em 0;
+    margin-top: 1rem;
+    position: sticky;
+    top: 16px;
 }
-.player button:hover {
+.player-button:hover {
     background: white;
     color: black;
 }
 
+.intro-section {
+    grid-column: span 12;
+    align-self: center;
+    margin-bottom: calc(5vh + 10vw);
+
+}
 .intro-text {
-    grid-column: span 6;
+    margin-top: -2px;
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.explainer {
+    grid-column: span 8;
     margin-top: -2px;
     font-family: 'IBM Plex Sans', sans-serif;
 }
@@ -209,4 +261,20 @@ body {
 
 a {
     color: white
+}
+
+.paintings {
+    display: flex;
+}
+.paintings > * {
+    transform: scale(0.9);
+    transition: 0.1s ease-in-out;
+}
+.paintings > *:hover {
+    transform: scale(1);
+}
+
+.bye {
+    font-family: 'IBM Plex Sans', sans-serif;
+    margin-top: 10vh
 }

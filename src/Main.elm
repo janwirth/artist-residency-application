@@ -13,23 +13,21 @@ import JoyDivision
 
 
 type alias Model =
-    {state : State, fft : List Fft, scroll : Float}
+    {state : State, fft : List Fft, scroll : Float, buffer : Float}
 
 type alias Fft = List Float
 
 type State =
-    NotStarted
-    | Paused
+    Paused
     | Playing
 
 stateToString state =
     case state of
-        NotStarted -> "not-started"
         Paused -> "paused"
         Playing -> "playing"
 
 keyframes =
-    { from = {drums = 0, melody = 0.5}
+    { from = {drums = 0, melody = 0.8}
     , over = {drums = 0.8, melody = 1}
     , to = to
     }
@@ -70,27 +68,11 @@ interpolate step =
                 else fn keyframes.from.melody keyframes.over.melody (step * 2)
         }
 
+initFft = List.repeat 600 (List.repeat 600 -200)
 
 init : ( Model, Cmd Msg )
 init =
-    ( {state = Paused, fft = [], scroll = 0}, Cmd.none )
-
-onFft =
-    Html.Events.on "fft" decodeFft
-
-decodeFft : Decode.Decoder Msg
-decodeFft =
-    Decode.field "detail" (Decode.list Decode.float)
-    |> Decode.map FftReceived
-
-onScroll =
-    Html.Events.on "scrollPct" decodeScroll
-
-decodeScroll : Decode.Decoder Msg
-decodeScroll =
-    Decode.field "detail" (Decode.float)
-    |> Decode.map Scrolled
-
+    ( {state = Paused, fft = initFft, scroll = 0, buffer = 0}, Cmd.none )
 ---- UPDATE ----
 
 
@@ -100,6 +82,7 @@ type Msg
     | Stop
     | FftReceived (List Float)
     | Scrolled Float
+    | BufferLoad Float
 
 
 
@@ -116,6 +99,8 @@ update msg model =
             ( {model | scroll = pct}, Cmd.none )
         FftReceived fft ->
             ( {model | fft = fft :: model.fft |> List.take 150}, Cmd.none )
+        BufferLoad percent ->
+            ( {model | buffer = percent}, Cmd.none )
 
 
 quote = Html.p [Html.Attributes.class "quote"] [
@@ -181,6 +166,7 @@ items = ["/painting-1.jpg", "/painting-2.jpg", "/painting-3.jpg"]
 imgs =
     items
     |> List.map (\src -> Html.node "intense-image" [Html.Attributes.class "artwork"] [ Html.img [Html.Attributes.src src] []])
+    |> Html.div [Html.Attributes.class "paintings"]
 
 viz : List Fft -> Html JoyDivision.Msg
 viz fft =
@@ -199,56 +185,137 @@ player model =
             playButton model
             , Html.node "factory-beat-player"
                 [ onFft
+                , onBufferLoad
                 , Html.Attributes.attribute "state" (stateToString model.state)
                 , Html.Attributes.attribute "levels" (encodeFrame frame |> Encode.encode 4)
                 ] []
         ]
+
+
+
+onFft =
+    Html.Events.on "fft" decodeFft
+
+onBufferLoad =
+    Html.Events.on "bufferloaded" (Decode.field "detail" Decode.float |> Decode.map BufferLoad)
+
+decodeFft : Decode.Decoder Msg
+decodeFft =
+    Decode.field "detail" (Decode.list Decode.float)
+    |> Decode.map FftReceived
+
+onScroll =
+    Html.Events.on "scrollPct" decodeScroll
+
+decodeScroll : Decode.Decoder Msg
+decodeScroll =
+    Decode.field "detail" (Decode.float)
+    |> Decode.map Scrolled
+
+introText =
+    Html.p [Html.Attributes.class "intro-text"]
+        [ Html.text "My name is Jan. I am a software/design/music crossover entrepreneur. "
+        , Html.text "This is an interactive music installation handcrafted just for you. Yes. You. "
+        , Html.text "The themes of the artist residency spoke to me right away as I am passionate about technology and its implications for how we think, live and love. "
+        , Html.text "Also: a quote heavy with meaning and projects in the field of technology, music and some art."
+        ]
+
+intro model = Html.section [Html.Attributes.class "intro-section"] [
+              Html.div [Html.Attributes.class "greeting"][text "Hallo!"]
+            , introText
+            , player model
+        ]
+
+quoteSection =
+        Html.section [Html.Attributes.class "quote-section"] [
+              quote
+            , Html.p [Html.Attributes.class "quote-source"] [
+                Html.text "Jaron Lanier, Philosopher, Artist, Technologist"
+            ]
+        ]
+
+
+paintings model =
+    Html.section [Html.Attributes.class "painting-section"] <| [
+          Html.h2 [] [Html.text "Paintings"]
+        , Html.p [] [Html.text "When I'm not coding, I do paintings or make electronic music. These are some paintings. Click To Enlarge."]
+        , (if model.buffer == 1 then imgs else Html.text "loading...")
+        ]
+
+projects =
+    Html.section [Html.Attributes.class "projects-section"] [
+              Html.h2 [] [Html.text "Software"]
+            , Html.div [Html.Attributes.class "projects-content"] [
+                softwareExperience
+            ]
+            , Html.div [Html.Attributes.class "projects-content"] [
+                maffText, maffImg
+            ]
+        ]
+
+musicSection =
+    Html.section [Html.Attributes.class "music-section"] [
+              Html.h2 [] [Html.text "Music"]
+       , Html.p [] [
+         Html.text "The soundtrack on this very application was produced by me on an MPC Live. "
+       , Html.text "Good music is one of the important things in my life. "
+       , Html.text "In the smalltown I grew up there are no electronic music events. I kickstarted a series of house music events featuring local DJs. We had ~40 paying guests per night."
+       , Html.text "The next event was crashed by corona."
+       , Html.text "I played DJ gigs on Art Exhibitions in Heidelberg and bars in Lisbon, in front of 1000 people in my smalltown and on chillout floors of druggy underground raves. "
+       , Html.text "My musical network spans across Berlin, Mainz, Heidelberg, Lisbon and Amsterdam."
+       ]
+    ]
+
+beyondSection =
+    Html.section [Html.Attributes.class "beyond-section"] [
+              Html.h2 [] [Html.text "Beyond all that"]
+       , Html.text "By now you should know what I am passionate about and capable of. "
+       , Html.text "I am super keen to get out of my comfort zone, to experiment with VR/AR as well as work with instrumentalists and singers. "
+       , Html.text "I want to enable people and I am happy to bring my resources and network to the table."
+       , Html.h2 [Html.Attributes.class "bye"] [Html.i [] [Html.text "See ya! :)"]]
+
+        ]
+
+maffImg =
+        Html.img [Html.Attributes.src "/maff.png", Html.Attributes.class "maff-picture"] []
+
+maffText =
+    Html.p [Html.Attributes.class "maff"] [
+         Html.text "You were asking for chatbots. Nice. "
+       , Html.a [ Html.Attributes.href "https://github.com/FranzSkuffka/maff"] [Html.text "Maff"]
+       , Html.text " is a Telegram bot that helps you transcribe photos of hand-written mathematical terms into LaTeX expression, reducing the need for scientists to learn LaTeX syntax. "
+       , Html.text "Maff uses computer vision technology to do its job. I wrote it in on a misty sunday afternoon."
+   ]
 
 view : Model -> Html Msg
 view model =
     Html.article [] <|
         -- intro
         [ viz model.fft |> Html.map (always NoOp)
-        , h1 [Html.Attributes.class "title"] [ text "Jan Wirth - Artist Residency application"]
-        , quote
-        , Html.p [Html.Attributes.class "quote-source"] [
-            Html.text "Jaron Lanier, Philosopher, Artist, Technologist"
-        ]
-        , Html.p [Html.Attributes.class "intro-text"]
-            [ Html.text "Hey, my name is Jan. I am a software/design/music crossover entrepreneur."
-            , Html.text "You are looking at a interactive music installation handcrafted just for you."
-            , Html.text "The general concept of the residency inspires me because I am passionate about technology and its implications for how we think, live and love."
-            , Html.text "The topics perfectly match my profile. I am a creative technologist with a background in arts and design."
-            , Html.text "Right now, you are looking at a mix between a non-stage live music experience and sound installation. It is composed, designed and hand-coded just for you."
-            , Html.text "I want to show how keen I am to work with the most ambitious people in experimental arts and technology and be part of something meaningful. So I put in the work."
-            , Html.text "I hope this experience helps you evaluate if and why I should be part of the artist residency program."
-            ]
         , scrollObserver
-        , player model
+        , h1 [Html.Attributes.class "title"] [ text "Jan Wirth - Artist Residency application"]
+        , intro model
+        , quoteSection
         -- what I do
-        , Html.h2 [] [Html.text "Art"]
-        ]
-        ++ imgs ++
-        [
-          Html.h2 [] [Html.text "Some Projects"]
-        , Html.p [Html.Attributes.class "maff"] [
-            Html.a [ Html.Attributes.href "https://github.com/FranzSkuffka/maff"] [Html.text "Maff"]
-           , Html.text " is a Telegram bot that helps you transcribe mathematical terms into LaTeX, reducing the need for scientist to learn special syntax for experession mathematical equations. "
-           , Html.text "Maff uses computer vision technology to do its job. I wrote it in on a misty sunday afternoon."
-           ]
-        , Html.div [Html.Attributes.class "img maff-picture"] [
-            Html.img [Html.Attributes.src "/maff.png"] []
+        , paintings model
+        , projects
+        , musicSection
+        , beyondSection
+
+        -- scalab, music, arts
+        -- what I did
+        -- outro
         ]
 
-        , Html.p [Html.Attributes.class "scalab-text"] [
-              Html.h2 [] [Html.text "Professional Experience"]
-            , Html.text "I am the CTO of "
+softwareExperience =
+    Html.p [Html.Attributes.class "scalab-text"] [
+            Html.text "I am the co-founder of "
             , Html.a [Html.Attributes.href "https://scalab.app"] [Html.text "scalab.app"]
             , Html.text ". We are working on technology that makes complex web app development accessible to more humans. "
             , Html.text "Scalab is an open-source 'low-code' environment. "
             , Html.text "You can design without code and evolve your work into a full web application. "
             , Html.text "However, unlike other solutions, scalab is compatible with traditional, code-driven development workflows. "
-            , Html.text "That means everyone in a team that knows how to use tools like Microsoft Powerpoint can participate in the creation of the thing that gets shipped to the user "
+            , Html.text "That means everyone in a team that knows how to use tools like Microsoft Powerpoint can participate in the creation of the thing that gets shipped to the user. "
             , Html.text "I met my co-founder David Beesley through "
             
             , Html.a [Html.Attributes.href "https://joinef.com"] [Html.text "Entrepreneur First"]
@@ -257,29 +324,30 @@ view model =
                 Html.text "Before Scalab I did work for "
               , Html.a [Html.Attributes.href "https://mercedes-benz.io"] [Html.text "Mercedes-Benz.io"]
               , Html.text " taking responsibility for the success of both customer-facing and internal tools. "
-              , Html.text "I fulfilled this responsibility in Stuttgart, Berlin, Lisbon and Singapore. "
-              , Html.text "I am grateful for this rich cultural and professional experience."
+              -- , Html.text "I fulfilled this responsibility in Stuttgart, Berlin, Lisbon and Singapore. "
+              -- , Html.text "I am grateful for this rich cultural and professional experience."
             ]
-        ]
-        -- scalab, music, arts
-        -- what I did
-        -- outro
         ]
 
 playButton : Model -> Html.Html Msg
-playButton {state} =
+playButton {state, buffer} =
     case state of
-        NotStarted ->
-            Html.button
-                [Html.Events.onClick Play]
-                [Html.text "gogo"]
         Paused ->
-            Html.button
-                [Html.Events.onClick Play]
-                [Html.text "gogo"]
+            let
+                isLoaded = buffer == 1
+                _ = Debug.log "buffer" (buffer, isLoaded)
+                label = if isLoaded then "Play"
+                        else "Loading " ++ (buffer * 100 |> round |> String.fromInt) ++ "%"
+            in
+                Html.button
+                    (if isLoaded
+                    then [Html.Events.onClick Play, Html.Attributes.class "player-button"]
+                    else [Html.Attributes.class "player-button"]
+                    )
+                    [Html.text label]
         Playing ->
             Html.button
-                [Html.Events.onClick Stop]
+                [Html.Events.onClick Stop, Html.Attributes.class "player-button"]
                 [Html.text "stopstop"]
 
 ---- PROGRAM ----
