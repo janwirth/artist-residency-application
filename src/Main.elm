@@ -29,7 +29,7 @@ stateToString state =
         Playing -> "playing"
 
 keyframes =
-    { from = {drums = 0, melody = 1}
+    { from = {drums = 0, melody = 0.5}
     , over = {drums = 0.8, melody = 1}
     , to = to
     }
