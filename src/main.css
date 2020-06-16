@@ -10,11 +10,12 @@
 }
 canvas {
     position: fixed;
-    transform: translateX(-10vw) rotateZ(135deg) translateY(10vw);
+    transform: skew(0deg, -5deg);
     z-index: -1;
     left: 0;
     width: 200vw !important;
     height: 100vh !important;
+    opacity: 0.8
 }
 * {
     font-size: inherit;

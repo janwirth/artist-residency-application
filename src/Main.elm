@@ -5,6 +5,7 @@ import Html exposing (Html, text, div, h1, img)
 import Html.Attributes exposing (src)
 import Html.Events
 import Json.Decode as Decode
+import Json.Encode as Encode
 import JoyDivision
 
 
@@ -12,7 +13,7 @@ import JoyDivision
 
 
 type alias Model =
-    {state : State, fft : List Fft}
+    {state : State, fft : List Fft, scroll : Float}
 
 type alias Fft = List Float
 
@@ -27,10 +28,52 @@ stateToString state =
         Paused -> "paused"
         Playing -> "playing"
 
+keyframes =
+    { from = {drums = 0, melody = 1}
+    , over = {drums = 0.8, melody = 1}
+    , to = to
+    }
+
+to : Frame
+to = {drums = 0.8, melody = 0}
+
+-- [generator-start]
+type alias Frame = {drums : Float, melody: Float}
+
+-- [generator-generated-start] -- DO NOT MODIFY or remove this line
+decodeFrame =
+   Decode.map2
+      Frame
+         ( Decode.field "drums" Decode.float )
+         ( Decode.field "melody" Decode.float )
+
+encodeFrame a =
+   Encode.object
+      [ ("drums", Encode.float a.drums)
+      , ("melody", Encode.float a.melody)
+      ] 
+-- [generator-end]
+
+interpolate : Float -> Frame
+interpolate step =
+    let
+        fn start end position =
+            start + ((end - start) * position)
+    in
+        { drums =
+            if step > 0.5
+                then fn keyframes.over.drums keyframes.to.drums (step * 2 - 1)
+                else fn keyframes.from.drums keyframes.over.drums (step * 2)
+        , melody =
+            if step > 0.5
+                then fn keyframes.over.melody keyframes.to.melody (step * 2 - 1)
+                else fn keyframes.from.melody keyframes.over.melody (step * 2)
+        }
+
 
 init : ( Model, Cmd Msg )
 init =
-    ( {state = Paused, fft = []}, Cmd.none )
+    ( {state = Paused, fft = [], scroll = 0}, Cmd.none )
 
 onFft =
     Html.Events.on "fft" decodeFft
@@ -40,6 +83,14 @@ decodeFft =
     Decode.field "detail" (Decode.list Decode.float)
     |> Decode.map FftReceived
 
+onScroll =
+    Html.Events.on "scrollPct" decodeScroll
+
+decodeScroll : Decode.Decoder Msg
+decodeScroll =
+    Decode.field "detail" (Decode.float)
+    |> Decode.map Scrolled
+
 ---- UPDATE ----
 
 
@@ -48,6 +99,7 @@ type Msg
     | Play
     | Stop
     | FftReceived (List Float)
+    | Scrolled Float
 
 
 
@@ -60,6 +112,8 @@ update msg model =
             ( {model | state = Playing}, Cmd.none )
         Stop ->
             ( {model | state = Paused}, Cmd.none )
+        Scrolled pct ->
+            ( {model | scroll = pct}, Cmd.none )
         FftReceived fft ->
             ( {model | fft = fft :: model.fft |> List.take 150}, Cmd.none )
 
@@ -120,6 +174,9 @@ visualizer fft =
         |> List.map renderBar
         |> Html.div [height, display, alignBottom]
 
+
+scrollObserver =
+    Html.node "scroll-observer" [onScroll, Html.Attributes.style "display" "none"] []
 items = ["/painting-1.jpg", "/painting-2.jpg", "/painting-3.jpg"]
 imgs =
     items
@@ -133,6 +190,19 @@ viz fft =
             |> JoyDivision.fromList
     in
     JoyDivision.view joyModel
+
+player model =
+    let
+        frame = interpolate model.scroll
+    in
+        Html.section [Html.Attributes.class "player"][
+            playButton model
+            , Html.node "factory-beat-player"
+                [ onFft
+                , Html.Attributes.attribute "state" (stateToString model.state)
+                , Html.Attributes.attribute "levels" (encodeFrame frame |> Encode.encode 4)
+                ] []
+        ]
 
 view : Model -> Html Msg
 view model =
@@ -153,10 +223,8 @@ view model =
             , Html.text "I want to show how keen I am to work with the most ambitious people in experimental arts and technology and be part of something meaningful. So I put in the work."
             , Html.text "I hope this experience helps you evaluate if and why I should be part of the artist residency program."
             ]
-        , Html.section [Html.Attributes.class "player"][
-            playButton model
-            , Html.node "factory-beat-player" [onFft, Html.Attributes.attribute "state" (stateToString model.state)] []
-        ]
+        , scrollObserver
+        , player model
         -- what I do
         , Html.h2 [] [Html.text "Art"]
         ]
