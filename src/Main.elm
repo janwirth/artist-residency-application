@@ -277,7 +277,7 @@ beyondSection =
         ]
 
 maffImg =
-        Html.img [Html.Attributes.src "/maff.png", Html.Attributes.class "maff-picture"] []
+        Html.img [Html.Attributes.src "/maff.png", Html.Attributes.class "maff-picture img"] []
 
 maffText =
     Html.p [Html.Attributes.class "maff"] [
