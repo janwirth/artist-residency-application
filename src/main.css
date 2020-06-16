@@ -53,7 +53,7 @@ body {
 article {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: 100vh 100vh 100vh auto 100vh 100vh;
+    grid-template-rows: minmax(100vh, auto) 100vh 100vh auto 100vh 100vh;
     grid-column-gap: 1.5%;
     margin: 0 50px;
 }
@@ -152,7 +152,7 @@ p {
     content: "—  "
 }
 .greeting {
-    font-size: calc(1rem + 5vh + 10vw);
+    font-size: calc(1rem + 5vh + 5vw);
     margin-left: -10px;
 }
 
@@ -161,7 +161,6 @@ p {
 }
 
 .player {
-    margin-top: 8px;
     font-family: 'IBM Plex Sans', sans-serif;
     grid-column: span 12;
     margin: 10px 0;
@@ -184,7 +183,8 @@ p {
 .intro-section {
     grid-column: span 12;
     align-self: center;
-    margin-bottom: calc(5vh + 10vw);
+    margin-top: 10vh;
+    margin-bottom: 10vh
 
 }
 .intro-text {

@@ -217,8 +217,8 @@ introText =
         [ Html.text "My name is Jan. I am a software/design/music crossover entrepreneur. "
         , Html.text "The themes of the artist residency spoke to me right away as I am passionate about technology and its implications for how we think, live and love. "
         , Html.text "On this site you can find out what I do and how it fits onto these themes. "
-        , Html.text "By the way, this is an interactive music installation handcrafted just for you. Yes. You. "
-        , Html.text "But first: A quote heavy with meaning. "
+        , Html.a [Html.Attributes.href "https://github.com/franzskuffka/artist-residency-application", Html.Attributes.target "_blank"] [Html.text "By the way, this is an interactive music installation handcrafted just for you. Yes. You."]
+        , Html.text " But first: A quote heavy with meaning. "
         ]
 
 intro model = Html.section [Html.Attributes.class "intro-section"] [
@@ -283,7 +283,7 @@ maffImg =
 maffText =
     Html.p [Html.Attributes.class "maff"] [
          Html.text "You were asking for chatbots. Nice. "
-       , Html.a [ Html.Attributes.href "https://github.com/FranzSkuffka/maff"] [Html.text "Maff"]
+       , Html.a [ Html.Attributes.target "_blank" , Html.Attributes.href "https://github.com/FranzSkuffka/maff"] [Html.text "Maff"]
        , Html.text " is a Telegram bot that helps you transcribe photos of hand-written mathematical terms into LaTeX expression, reducing the need for scientists to learn LaTeX syntax. "
        , Html.text "Maff uses computer vision technology to do its job. I wrote it in on a misty sunday afternoon. "
    ]
@@ -311,7 +311,7 @@ view model =
 softwareExperience =
     Html.p [Html.Attributes.class "scalab-text"] [
             Html.text "I am the co-founder of "
-            , Html.a [Html.Attributes.href "https://scalab.app"] [Html.text "scalab.app"]
+            , Html.a [Html.Attributes.target "_blank" , Html.Attributes.href "https://scalab.app"] [Html.text "scalab.app"]
             , Html.text ". We are working on technology that makes complex web app development accessible to more humans. "
             , Html.text "Scalab is an open-source 'low-code' environment. "
             , Html.text "You can design without code and evolve your work into a full web application. "
@@ -319,11 +319,11 @@ softwareExperience =
             , Html.text "That means everyone in a team that knows how to use tools like Microsoft Powerpoint can participate in the creation of the thing that gets shipped to the user. "
             , Html.text "I met my co-founder David Beesley through "
             
-            , Html.a [Html.Attributes.href "https://joinef.com"] [Html.text "Entrepreneur First"]
+            , Html.a [Html.Attributes.target "_blank" ,Html.Attributes.href "https://joinef.com"] [Html.text "Entrepreneur First"]
             , Html.text ", 'the world’s leading talent investor'. "
             , Html.p [] [
                 Html.text "Before Scalab I did work for "
-              , Html.a [Html.Attributes.href "https://mercedes-benz.io"] [Html.text "Mercedes-Benz.io"]
+              , Html.a [Html.Attributes.target "_blank" ,Html.Attributes.href "https://mercedes-benz.io"] [Html.text "Mercedes-Benz.io"]
               , Html.text " taking responsibility for the success of both customer-facing and internal tools. "
               -- , Html.text "I fulfilled this responsibility in Stuttgart, Berlin, Lisbon and Singapore. "
               -- , Html.text "I am grateful for this rich cultural and professional experience. "
