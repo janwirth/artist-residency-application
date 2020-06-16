@@ -335,7 +335,6 @@ playButton {state, buffer} =
         Paused ->
             let
                 isLoaded = buffer == 1
-                _ = Debug.log "buffer" (buffer, isLoaded)
                 label = if isLoaded then "Play"
                         else "Loading " ++ (buffer * 100 |> round |> String.fromInt) ++ "%"
             in
