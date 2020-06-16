@@ -110,10 +110,10 @@ quote = Html.p [Html.Attributes.class "quote"] [
     , Html.span [Html.Attributes.class "ellipsis"] [Html.text "[...]"]
     , Html.text "the economy to"
     , Html.span [Html.Attributes.class "ellipsis"] [Html.text "[...]"]
-    , Html.text "be about subjective values."
+    , Html.text "be about subjective values. "
     , Html.span [Html.Attributes.class "ellipsis"] [Html.text "[...]"]
     , Html.text "That's a signal that we are creating technologies and an economy that's really "
-    , Html.span [Html.Attributes.class "nowrap"] [Html.text "serving us."]
+    , Html.span [Html.Attributes.class "nowrap"] [Html.text "serving us. "]
     ]
 
 -- Jaron Lanier, Making Sense Podcast #135, minute 11
@@ -215,9 +215,10 @@ decodeScroll =
 introText =
     Html.p [Html.Attributes.class "intro-text"]
         [ Html.text "My name is Jan. I am a software/design/music crossover entrepreneur. "
-        , Html.text "This is an interactive music installation handcrafted just for you. Yes. You. "
         , Html.text "The themes of the artist residency spoke to me right away as I am passionate about technology and its implications for how we think, live and love. "
-        , Html.text "Also: a quote heavy with meaning and projects in the field of technology, music and some art."
+        , Html.text "On this site you can find out what I do and how it fits onto these themes. "
+        , Html.text "By the way, this is an interactive music installation handcrafted just for you. Yes. You. "
+        , Html.text "But first: A quote heavy with meaning. "
         ]
 
 intro model = Html.section [Html.Attributes.class "intro-section"] [
@@ -238,8 +239,8 @@ quoteSection =
 paintings model =
     Html.section [Html.Attributes.class "painting-section"] <| [
           Html.h2 [] [Html.text "Paintings"]
-        , Html.p [] [Html.text "When I'm not coding, I do paintings or make electronic music. These are some paintings. Click To Enlarge."]
-        , (if model.buffer == 1 then imgs else Html.text "loading...")
+        , Html.p [] [Html.text "When I'm not coding, I do paintings or make electronic music. These are some paintings. Click To Enlarge. "]
+        , (if model.buffer == 1 then imgs else Html.text "loading... ")
         ]
 
 projects =
@@ -257,12 +258,12 @@ musicSection =
     Html.section [Html.Attributes.class "music-section"] [
               Html.h2 [] [Html.text "Music"]
        , Html.p [] [
-         Html.text "The soundtrack on this very application was produced by me on an MPC Live. "
+         Html.text "The soundtrack on this very application was produced by me on an AKAI MPC Live. "
        , Html.text "Good music is one of the important things in my life. "
-       , Html.text "In the smalltown I grew up there are no electronic music events. I kickstarted a series of house music events featuring local DJs. We had ~40 paying guests per night."
-       , Html.text "The next event was crashed by corona."
+       , Html.text "In the smalltown I grew up there are no electronic music events. I kickstarted a series of house music events featuring local DJs. We had ~40 paying guests per night. "
+       , Html.text "The next event was crashed by corona. "
        , Html.text "I played DJ gigs on Art Exhibitions in Heidelberg and bars in Lisbon, in front of 1000 people in my smalltown and on chillout floors of druggy underground raves. "
-       , Html.text "My musical network spans across Berlin, Mainz, Heidelberg, Lisbon and Amsterdam."
+       , Html.text "My musical network spans across Berlin, Mainz, Heidelberg, Lisbon and Amsterdam. "
        ]
     ]
 
@@ -271,7 +272,7 @@ beyondSection =
               Html.h2 [] [Html.text "Beyond all that"]
        , Html.text "By now you should know what I am passionate about and capable of. "
        , Html.text "I am super keen to get out of my comfort zone, to experiment with VR/AR as well as work with instrumentalists and singers. "
-       , Html.text "I want to enable people and I am happy to bring my resources and network to the table."
+       , Html.text "I want to enable people and I am happy to bring my resources and network to the table. "
        , Html.h2 [Html.Attributes.class "bye"] [Html.i [] [Html.text "See ya! :)"]]
 
         ]
@@ -284,7 +285,7 @@ maffText =
          Html.text "You were asking for chatbots. Nice. "
        , Html.a [ Html.Attributes.href "https://github.com/FranzSkuffka/maff"] [Html.text "Maff"]
        , Html.text " is a Telegram bot that helps you transcribe photos of hand-written mathematical terms into LaTeX expression, reducing the need for scientists to learn LaTeX syntax. "
-       , Html.text "Maff uses computer vision technology to do its job. I wrote it in on a misty sunday afternoon."
+       , Html.text "Maff uses computer vision technology to do its job. I wrote it in on a misty sunday afternoon. "
    ]
 
 view : Model -> Html Msg
@@ -319,13 +320,13 @@ softwareExperience =
             , Html.text "I met my co-founder David Beesley through "
             
             , Html.a [Html.Attributes.href "https://joinef.com"] [Html.text "Entrepreneur First"]
-            , Html.text ", 'the world’s leading talent investor'."
+            , Html.text ", 'the world’s leading talent investor'. "
             , Html.p [] [
                 Html.text "Before Scalab I did work for "
               , Html.a [Html.Attributes.href "https://mercedes-benz.io"] [Html.text "Mercedes-Benz.io"]
               , Html.text " taking responsibility for the success of both customer-facing and internal tools. "
               -- , Html.text "I fulfilled this responsibility in Stuttgart, Berlin, Lisbon and Singapore. "
-              -- , Html.text "I am grateful for this rich cultural and professional experience."
+              -- , Html.text "I am grateful for this rich cultural and professional experience. "
             ]
         ]
 
