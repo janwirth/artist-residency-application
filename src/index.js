@@ -5,9 +5,8 @@ import * as serviceWorker from './serviceWorker';
 import {Player, Transport, Loop, AutoFilter, FFT} from 'tone'
 import Intense from '@tholman/intense-images'
 
-const fft = new FFT(256)
+const fft = new FFT(128)
 
-console.log(canvas)
 
 
 class AudioInstallation extends HTMLElement {
@@ -21,7 +20,6 @@ class AudioInstallation extends HTMLElement {
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        console.log('name', name)
         if (name == 'state' ) {
             const startedPlaying =
                 ((oldValue == 'not-started') || (oldValue == 'paused')) && newValue == 'playing'
@@ -31,10 +29,11 @@ class AudioInstallation extends HTMLElement {
                      {
                          const detail = Array.from(fft.getValue())
                          if (detail[0] !== -Infinity) {
-                             this.dispatchEvent(new CustomEvent('fft', {detail}))
+                             const dispatch = () => this.dispatchEvent(new CustomEvent('fft', {detail}))
+                             window.requestAnimationFrame(dispatch)
                          }
                      }
-                this.interval = setInterval(redAndEmit, 300)
+                this.interval = setInterval(redAndEmit, 40)
             }
             const stoppedPlaying =
                 (oldValue == 'playing') && newValue == 'paused'
@@ -73,7 +72,7 @@ const tracks = [ 'bass'
     , 'wood-1'
     ]
 
-const tracksToFollow = ['strings-background']
+const tracksToFollow = ['rim-1', 'kick-1', 'clap-1']
 const trackLength = '4m'
 const bpm = 93
 Transport.bpm.value = bpm
@@ -91,7 +90,6 @@ const players = tracks.map(track => {
 })
 
 const loop = new Loop(time => {
-    console.log(time)
     players.forEach(({player}) => player.restart())
     // Transport.start()
 }, trackLength)

@@ -1,4 +1,4 @@
-module JoyDivision exposing (main, init, view)
+module JoyDivision exposing (view, fromList, Msg)
 
 import Array exposing (Array)
 import Browser
@@ -13,9 +13,9 @@ import Random
 import Time exposing (Posix)
 
 
-main : Program Float Model Msg
-main =
-    Browser.element { init = init, update = update, subscriptions = subscriptions, view = view }
+--main : Program Float Model Msg
+--main =
+--    Browser.element { init = init, update = update, subscriptions = subscriptions, view = view }
 
 
 subscriptions : Model -> Sub Msg
@@ -25,33 +25,35 @@ subscriptions model =
 
 h : number
 h =
-    500
+    1500
 
 
 w : number
 w =
-    500
+    2000
 
 
-padding : number
-padding =
-    100
+paddingY : number
+paddingY =
+    300
 
 
 stepX =
-    10
+    150
 
 
 stepY =
-    5
+    10
 
 
 cols =
-    (w - padding * 2) // stepX
+    (w * 2) // stepX
+    |> Debug.log "cols"
 
 
 rows =
-    (h - padding * 2) // stepY
+    (h - paddingY * 2) // stepY
+    |> Debug.log "rows"
 
 
 cells =
@@ -67,6 +69,29 @@ type alias Model =
     , points : Points
     }
 
+fromList : List (List Float) -> Model
+fromList fft =
+    let
+        randomYs = fft
+            |> List.map (List.take cols >> List.map ((*) 0.99))
+            |> List.concatMap identity
+        pointFromIndexAndRandom i r =
+            { point =
+                indexToCoords i
+                    |> Tuple.mapBoth toFloat toFloat
+                    |> coordsToPx
+                    |> moveAround (r / 30)
+
+            , random = 0
+            }
+
+        points =
+            Array.fromList randomYs
+                |> Array.indexedMap pointFromIndexAndRandom
+    in
+    { count = 0
+    , points = points
+    }
 
 type Msg
     = AnimationFrame Posix
@@ -88,21 +113,22 @@ indexToCoords i =
 
 
 coordsToPx ( x, y ) =
-    ( x * stepX + stepX / 2 + padding
-    , y * stepY + stepY / 2 + padding * 1.3
+    ( (x - 1) * stepX + stepX / 2
+    , y * stepY + stepY / 2 + paddingY * 1.3
     )
 
 
 moveAround r ( x, y ) =
     let
         distanceToCenter =
-            abs (x - w / 2)
+            abs ((x - w / 2) / 3)
+            
 
         maxVariance =
             150
 
         p =
-            ((w - padding * 2 - 100) / 2) / maxVariance
+            ((w * 2 - 100) / 2) / maxVariance
 
         variance =
             max (-distanceToCenter / p + maxVariance) 0
@@ -112,32 +138,7 @@ moveAround r ( x, y ) =
     in
     ( x, y + random )
 
-
-init : Float -> ( Model, Cmd Msg )
-init floatSeed =
-    let
-        ( randomYs, seed ) =
-            Random.initialSeed (floatSeed * 100000 |> floor)
-                |> Random.step (Random.list cells (Random.float 0 1))
-
-        pointFromIndexAndRandom i r =
-            { point =
-                indexToCoords i
-                    |> Tuple.mapBoth toFloat toFloat
-                    |> coordsToPx
-                    |> moveAround r
-            , random = r
-            }
-
-        points =
-            Array.fromList randomYs
-                |> Array.indexedMap pointFromIndexAndRandom
-    in
-    ( { count = 0, points = points }
-    , Cmd.none
-    )
-
-
+ 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -147,21 +148,23 @@ update msg model =
             )
 
 
-bgColor =
-    Color.hsl (degrees 260) 0.1 0.1
-
 
 view : Model -> Html Msg
 view model =
     Canvas.toHtml
         ( w, h )
         []
-        (shapes [ fill bgColor ] [ rect ( 0, 0 ) w h ]
-            :: (Grid.fold2d { cols = cols, rows = rows } (drawLines model.points) ( Array.empty, Array.empty )
+        (clearScreen ::
+        (Grid.fold2d { cols = cols, rows = rows } (drawLines model.points) ( Array.empty, Array.empty )
                     |> Tuple.second
                     |> Array.toList
                )
         )
+
+
+
+clearScreen =
+    clear (0, 0) w h
 
 
 drawLines : Points -> ( Int, Int ) -> ( Array PathSegment, Array Renderable ) -> ( Array PathSegment, Array Renderable )
@@ -199,11 +202,12 @@ drawLines points ( x, y ) ( currentLine, lines ) =
     in
     if x == cols - 1 then
         let
+            a = 0.4
             newLine =
                 shapes
                     [ lineWidth 1.5
-                    , fill bgColor
-                    , stroke (Color.hsl (degrees 188) 0.3 0.8)
+                    -- , fill bgColor
+                    , stroke <| Color.rgba 96 0 117 a
                     ]
                     [ path ( 0, 0 )
                         -- We add the moveTo above to the line, so this won't matter

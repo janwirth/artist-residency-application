@@ -8,6 +8,14 @@
 [data-elm-hot="true"] {
   height: inherit;
 }
+canvas {
+    position: fixed;
+    transform: translateX(-10vw) rotateZ(135deg) translateY(10vw);
+    z-index: -1;
+    left: 0;
+    width: 200vw !important;
+    height: 100vh !important;
+}
 * {
     font-size: inherit;
     font-family: inherit;

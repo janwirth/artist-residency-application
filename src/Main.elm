@@ -12,7 +12,9 @@ import JoyDivision
 
 
 type alias Model =
-    {state : State, fft : List Float}
+    {state : State, fft : List Fft}
+
+type alias Fft = List Float
 
 type State =
     NotStarted
@@ -59,7 +61,7 @@ update msg model =
         Stop ->
             ( {model | state = Paused}, Cmd.none )
         FftReceived fft ->
-            ( {model | fft = List.take 40 fft}, Cmd.none )
+            ( {model | fft = fft :: model.fft |> List.take 150}, Cmd.none )
 
 
 quote = Html.p [Html.Attributes.class "quote"] [
@@ -97,8 +99,8 @@ renderStyles {fft} =
     in
         Html.node "style" [] [Html.text (rules)]
 
-visualizer : Model -> Html Msg
-visualizer {fft} =
+visualizer : Fft -> Html Msg
+visualizer fft =
     let
         height = Html.Attributes.style "height" "200px"
         bg = Html.Attributes.style "background-color" "red"
@@ -123,21 +125,20 @@ imgs =
     items
     |> List.map (\src -> Html.node "intense-image" [Html.Attributes.class "artwork"] [ Html.img [Html.Attributes.src src] []])
 
-viz model =
+viz : List Fft -> Html JoyDivision.Msg
+viz fft =
     let
-        val =
-            List.head model.fft
-            |> Maybe.withDefault 10
-            |> Debug.log "val"
-        (joyModel, _) = JoyDivision.init 10
+        joyModel =
+            fft
+            |> JoyDivision.fromList
     in
     JoyDivision.view joyModel
+
 view : Model -> Html Msg
 view model =
     Html.article [] <|
         -- intro
-        [ renderStyles model
-        , viz model |> Html.map (always NoOp)
+        [ viz model.fft |> Html.map (always NoOp)
         , h1 [Html.Attributes.class "title"] [ text "Jan Wirth - Artist Residency application"]
         , quote
         , Html.p [Html.Attributes.class "quote-source"] [
